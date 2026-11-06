@@ -1,41 +1,57 @@
 
 .data
-    n:      .word 7         # Input: calculate Fibonacci(7)
-    result: .word 0          # Stores the final Fibonacci number
+    n:      .word 7         		# Input: calculate Fibonacci(7)
+    result: .word 0          		# Stores the final Fibonacci number
 
 .text
 .globl main
 
 main:
-    # Load n from memory
-    lw $t0, n
-    # Check if n <= 1
-    ble $t0, 1, base_case #break to base case
-    # Initialize Fibonacci variables
+    
+    lw $a0, n				# Load n from memory
+    jal Fibonacci			# Call Fibonacci(n)
+    
+    sw $v0, result 			# Store returned value
+    
+    lw $a0, result			# Load result into argument0 
+    li $v0, 1 				# Print result
+    syscall
+    
+    li $v0, 10				# Exit program
+    syscall
+    
+Fibonacci:
+    
+    slti $t6, $a0, 2		    	# Check if n <= 1
+    bne $t6, $zero, base_case 		# break to base case 
+    
+    # Initialize variables
     li $t1, 0                # a = 0
     li $t2, 1                # b = 1
     li $t3, 0                # i = 0
-    # Loop n-1 times t4=t0-1
-    addi $t4, $t0, -1
+    
+    addi $t4, $a0, -1			     # Loop n-1 times t4 = a0 - 1
 
-loop: #start of loop
-    beq $t3, $t4, done #brake to done
+loop: 
+    beq $t3, $t4, done 		# break to done
+    
     # temp = b save t2 into t5-temp
-    move $t5, $t2 #save front value to t5
-    # b = a + b
-    add $t2, $t1, $t2
+    move $t5, $t2 			# save front value to t5
+    
+    add $t2, $t1, $t2 			# b = a + b
+    
     # a = temp\ --t5 is temp so move t5 into t1
-    move $t1, $t5 #make t1 back value and give it t5 old back value
+    move $t1, $t5 			# make t1 back value and t5 old back value
+    
     # i++ / loop incremernt after calculations
     addi $t3, $t3, 1
-    j loop #loop back to loop
-
-base_case: #if you end up here it because n=1 or less otherwise something is wrong
-    move $t2, $t0 #move t2<---t0 this should just be 1
     
-done:#this is where 
-    # Store result in memory aka t2 stored into--->result
-    sw $t2, result
-    # Exit program
-    li $v0, 10
-    syscall
+    j loop #Repeat Loop
+
+base_case: #if n = 0 or 1, Fib(n) = n
+    move $v0, $a0 			# move v0<---a0
+    jr $ra				    # return n
+    
+done:
+    move $v0, $t2			# return b 
+    jr $ra				
