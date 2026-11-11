@@ -9,7 +9,7 @@ Fernando Jimenez - 664179844:
 - Revised code by cleaning up comments, separating Fibonacci(n) from main, and printed result in the I/O window. 
 - Wrote progress report.
   
-Edwin Rocha - #:
+Edwin Rocha - 679354802:
 
 - Implemented majority of the code by setting up the right logic for the MIPS program to calculate the nth Fibonacci number.
 - Revised progress report. 
