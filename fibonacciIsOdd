@@ -1,0 +1,98 @@
+.data
+    n:      .word 7         		# Input: calculate Fibonacci(7)
+    result: .word 0          		# Stores the final Fibonacci number
+	m:  .word 0  #value for isodd fuction
+	
+	fibText: .asciiz "Fibonacci result: "
+        oddText: .asciiz "IsOdd result: "
+        newline: .asciiz "\n"
+.text
+.globl main
+
+main:
+    
+    lw $a0, n				# Load n from memory    
+    jal Fibonacci			# Call Fibonacci(n)
+    
+    sw $v0, result 			# Store returned value v0---->result
+    sw $v0, m   #save result into m v0--->m before v0 is changed 
+    
+    la $a0, fibText  #will print out text 
+    li $v0, 4
+    syscall
+    
+    lw $a0, result			# Load result into argument0 
+    li $v0, 1 				# Print result
+    syscall
+     
+    la $a0, newline # prints new line aka is just enter for normal typing
+    li $v0, 4
+    syscall
+    
+    la $a0, oddText
+    li $v0, 4
+    syscall
+    
+    lw $a0, m #load m into a0
+    jal IsOdd # call fuction IsOdd
+    
+    move $a0, $v0      			#prints isOdd result
+    li $v0, 1
+    syscall
+       
+    li $v0, 10				# Exit program
+    syscall
+    
+Fibonacci:
+    
+    slti $t6, $a0, 2		    	# Check if n <= 1
+    bne $t6, $zero, base_case 		# break to base case 
+    
+    # Initialize variables
+    li $t1, 0                # a = 0
+    li $t2, 1                # b = 1
+    li $t3, 0                # i = 0
+    
+    addi $t4, $a0, -1			     # Loop n-1 times t4 = a0 - 1
+
+loop: 
+    beq $t3, $t4, done 		# break to done
+    
+    # temp = b save t2 into t5-temp
+    move $t5, $t2 			# save front value to t5
+    
+    add $t2, $t1, $t2 			# b = a + b
+    
+    # a = temp\ --t5 is temp so move t5 into t1
+    move $t1, $t5 			# make t1 back value and t5 old back value
+    
+    # i++ / loop incremernt after calculations
+    addi $t3, $t3, 1
+    
+    j loop #Repeat Loop
+
+base_case: #if n = 0 or 1, Fib(n) = n
+    move $v0, $a0 			# move v0<---a0
+    jr $ra				    # return n
+    
+done:
+    move $v0, $t2			# return b 
+    jr $ra
+ #--------------------------------------------------------------------line for separating both functions---------------------------------------   
+   IsOdd:#isodd part from part b updated for fibonacciIsodd
+   move $t0, $a0		# use temporary value
+ 
+Loop2:
+   blt $t0, 2, Done2		# check remainder to determine if its odd or even
+   addi $t0, $t0, -2		# division by repeated subtraction
+   j Loop2 			# Loop
+
+Done2:
+   beq $t0, $zero, Even	# Even if remainder is 0
+   li $v0, 1			# Return 1 (True) otherwise.
+   jr $ra
+   
+Even:
+   li $v0, 0			# Return 0 (False)
+   jr $ra
+    				
