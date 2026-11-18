@@ -2,7 +2,7 @@
 .data
     n:      .word 7         		# Input: calculate Fibonacci(7)
     result: .word 0          		# Stores the final Fibonacci number
-
+    fibText: .asciiz "Fibonacci result: "
 .text
 .globl main
 
@@ -12,7 +12,11 @@ main:
     jal Fibonacci			# Call Fibonacci(n)
     
     sw $v0, result 			# Store returned value
-    
+
+    la $a0, fibText  #will print out text 
+    li $v0, 4
+    syscall
+
     lw $a0, result			# Load result into argument0 
     li $v0, 1 				# Print result
     syscall
