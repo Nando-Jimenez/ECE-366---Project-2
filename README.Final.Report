@@ -17,4 +17,4 @@ GitHub Repository Link: https://github.com/Nando-Jimenez/ECE-366---Project-2
 How to run program: 
 
   Set the n in the second line of our code to the desired input, then assemble and run on Mars4.5.
-You should see both results, the n'th fibonacci number and whether it's odd or even, printed on the I/O window.
+You should see both results, the n'th fibonacci number and whether it's odd or even, printed in the I/O window.
